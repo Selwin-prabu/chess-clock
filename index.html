@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Professional chess clock with timer, statistics, and customizable settings">
+  <meta name="theme-color" content="#e94560">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <title>Chess Clock - Professional Timer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" id="themeToggle" title="Toggle Theme">🌙</button>
+
+<!-- SETTINGS SCREEN -->
+<div id="settingsScreen" class="screen">
+  <h1 class="title">Chess clock</h1>
+
+  <!-- Preset Time Controls -->
+  <div class="presets">
+    <button class="preset-btn" data-minutes="1" data-increment="0">Bullet 1+0</button>
+    <button class="preset-btn" data-minutes="2" data-increment="1">Bullet 2+1</button>
+    <button class="preset-btn" data-minutes="3" data-increment="0">Blitz 3+0</button>
+    <button class="preset-btn" data-minutes="3" data-increment="2">Blitz 3+2</button>
+    <button class="preset-btn" data-minutes="5" data-increment="0">Blitz 5+0</button>
+    <button class="preset-btn" data-minutes="5" data-increment="3">Blitz 5+3</button>
+    <button class="preset-btn" data-minutes="10" data-increment="0">Rapid 10+0</button>
+    <button class="preset-btn" data-minutes="15" data-increment="10">Rapid 15+10</button>
+  </div>
+
+  <div class="divider">OR CUSTOM</div>
+
+  <div class="setting">
+    <label>Player 1 Name</label>
+    <input id="player1Name" type="text" placeholder="Player 1" maxlength="20">
+  </div>
+
+  <div class="setting">
+    <label>Player 2 Name</label>
+    <input id="player2Name" type="text" placeholder="Player 2" maxlength="20">
+  </div>
+
+  <div class="setting">
+    <label>Time different between players</label>
+    <div class="toggle-switch" id="timeDiffToggle">
+      <div class="toggle-thumb"></div>
+    </div>
+  </div>
+
+  <div id="timeDiffSettings" class="hidden">
+    <div class="setting">
+      <label>Player 1 Minutes</label>
+      <input id="minutes1Input" type="number" value="5" min="1" max="180">
+    </div>
+    <div class="setting">
+      <label>Player 2 Minutes</label>
+      <input id="minutes2Input" type="number" value="3" min="1" max="180">
+    </div>
+  </div>
+
+  <div id="sameTimeSettings">
+    <div class="setting">
+      <label>Minutes per player</label>
+      <input id="minutesInput" type="number" value="5" min="1" max="180">
+    </div>
+  </div>
+
+  <div class="setting">
+    <label>Extra seconds</label>
+    <input id="incrementInput" type="number" value="0" min="0" max="60">
+  </div>
+
+  <div class="setting">
+    <label>Timing method</label>
+    <select id="methodInput">
+      <option value="fischer">Fischer (increment added after move)</option>
+      <option value="delay">Delay (time before clock starts)</option>
+    </select>
+  </div>
+
+  <div class="setting">
+    <label>Sound notifications</label>
+    <div class="toggle-switch active" id="soundToggle">
+      <div class="toggle-thumb"></div>
+    </div>
+  </div>
+
+  <div class="setting">
+    <label>Tick sound</label>
+    <select id="tickSoundSelect">
+      <option value="antique">Antique Watch</option>
+      <option value="modern">Modern Click</option>
+      <option value="soft">Soft Beep</option>
+      <option value="none">None (alerts only)</option>
+    </select>
+  </div>
+
+  <div class="setting">
+    <label>Use spacebar for clock switch</label>
+    <div class="toggle-switch active" id="spacebarToggle">
+      <div class="toggle-thumb"></div>
+    </div>
+  </div>
+
+  <div class="setting">
+    <label>Vibration (mobile)</label>
+    <div class="toggle-switch active" id="vibrationToggle">
+      <div class="toggle-thumb"></div>
+    </div>
+  </div>
+
+  <button id="goBtn" class="go">Continue</button>
+  
+  <div class="stats-link">
+    <button id="viewStatsBtn" class="text-btn">📊 View Statistics</button>
+  </div>
+</div>
+
+<!-- INSTRUCTION SCREEN -->
+<div id="instructionScreen" class="screen hidden instruction-screen">
+  <h1 class="title">How to Play</h1>
+  
+  <div class="instruction-content">
+    <h2>Starting the Game</h2>
+    <p><strong>Player with black pieces clicks opponent's clock to start the game.</strong></p>
+    
+    <h2>Keyboard Controls</h2>
+    <p><strong>Left player</strong> can use following keys:</p>
+    <p><span class="key">1, 2, 3, q, w, e, a, s, d, spacebar, Enter</span></p>
+    
+    <p><strong>Right player</strong> can use following keys:</p>
+    <p><span class="key">8, 9, 0, i, o, p, k, l, ;, spacebar, Enter</span></p>
+    
+    <h2>Game Rules</h2>
+    <p>• Click opponent's clock when you finish your move</p>
+    <p>• Clock turns red when time is low (under 30 seconds)</p>
+    <p>• Sound alerts at 30s, 10s, and game over</p>
+    <p>• Pause button to pause/resume</p>
+    <p>• Reset button to restart</p>
+    <p>• Move counter tracks total moves</p>
+  </div>
+
+  <button id="startGameBtn" class="go">Start Game!</button>
+</div>
+
+<!-- CLOCK SCREEN -->
+<div id="clockScreen" class="screen hidden">
+
+  <div class="top-bar">
+    <button id="fullscreen" title="Fullscreen">⛶</button>
+    <button id="pause" title="Pause/Resume">⏸</button>
+    <button id="sound" title="Toggle Sound" class="active">🔊</button>
+    <button id="reset" title="Reset">⟳</button>
+    <button id="settings" title="Settings">⚙️</button>
+  </div>
+
+  <div class="clock-row">
+    <div id="clockA" class="clock-tile">
+      <span class="player-label" id="labelA">Player 1</span>
+      <span class="move-counter" id="movesA">0 moves</span>
+      <span id="timeA" class="time-display">5:00</span>
+    </div>
+
+    <div id="clockB" class="clock-tile">
+      <span class="player-label" id="labelB">Player 2</span>
+      <span class="move-counter" id="movesB">0 moves</span>
+      <span id="timeB" class="time-display">5:00</span>
+    </div>
+  </div>
+
+  <div id="status"></div>
+</div>
+
+<!-- STATISTICS SCREEN -->
+<div id="statsScreen" class="screen hidden">
+  <h1 class="title">Statistics</h1>
+  
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="stat-value" id="totalGames">0</div>
+      <div class="stat-label">Total Games</div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-value" id="player1Wins">0</div>
+      <div class="stat-label">Player 1 Wins</div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-value" id="player2Wins">0</div>
+      <div class="stat-label">Player 2 Wins</div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-value" id="avgGameTime">0:00</div>
+      <div class="stat-label">Avg Game Time</div>
+    </div>
+  </div>
+
+  <div class="game-history" id="gameHistory">
+    <h2>Recent Games</h2>
+    <div id="historyList"></div>
+  </div>
+
+  <div class="stats-actions">
+    <button id="clearStatsBtn" class="secondary-btn">Clear Statistics</button>
+    <button id="backToSettingsBtn" class="go">Back to Settings</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+  // Register Service Worker for PWA
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then((registration) => {
+          console.log('ServiceWorker registered:', registration);
+        })
+        .catch((error) => {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
+  }
+</script>
+</body>
+</html>
