@@ -4,7 +4,7 @@ A simple, interactive chess clock web application designed to manage time during
 
 ## 🌐 Live Demo
 
-[Play Chess Clock](https://user-fiero.github.io/chess-clock/)
+[Play Chess Clock](https://Selwin-prabu.github.io/chess-clock/)
 
 ## ✨ Features
 
@@ -27,7 +27,7 @@ A simple, interactive chess clock web application designed to manage time during
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/user-fiero/chess-clock.git
+git clone https://github.com/Selwin-prabu/chess-clock.git
 ```
 
 ### 2. Navigate to the project directory
